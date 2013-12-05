@@ -1,9 +1,9 @@
-;;; j-cheatsheet.el --- Quick J reference for Emacs
+;;; helm-j-cheatsheet.el --- Quick J reference for Emacs
 
 ;; Copyright (C) 2013  Oleh Krehel
 
 ;; Author: Oleh Krehel <ohwoeowho@gmail.com>
-;; URL: https://github.com/abo-abo/j-cheatsheet
+;; URL: https://github.com/abo-abo/helm-j-cheatsheet
 ;; Version: 0.1
 ;; Package-Requires: ((helm "1.5.3") (j-mode "1.0.0"))
 
@@ -36,7 +36,7 @@
 ;;; Code:
 
 (defun jc-prep (s)
-  "Fontify S for `j-cheatsheet'."
+  "Fontify S for `helm-j-cheatsheet'."
   (replace-regexp-in-string
    "\\[[^]]*\\]"
    (lambda(x) (propertize (substring x 1 -1) 'face 'font-lock-keyword-face))
@@ -176,11 +176,11 @@
      (action . jc-action-show-doc))))
 
 ;;;###autoload
-(defun j-cheatsheet ()
+(defun helm-j-cheatsheet ()
   "Use helm to show a J cheat sheet."
   (interactive)
   (helm :sources helm-source-j-cheatsheet))
 
-(provide 'j-cheatsheet)
+(provide 'helm-j-cheatsheet)
 
-;;; j-cheatsheet.el ends here
+;;; helm-j-cheatsheet.el ends here
