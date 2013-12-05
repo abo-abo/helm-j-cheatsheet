@@ -3,7 +3,7 @@
 ;; Copyright (C) 2013  Oleh Krehel
 
 ;; Author: Oleh Krehel <ohwoeowho@gmail.com>
-;; URL: https://github.com/abo-abo/function-args
+;; URL: https://github.com/abo-abo/j-cheatsheet
 ;; Version: 0.1
 ;; Package-Requires: ((helm "1.5.3") (j-mode "1.0.0"))
 
