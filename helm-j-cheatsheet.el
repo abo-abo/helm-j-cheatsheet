@@ -29,11 +29,11 @@
 ;; * look up a command by English name
 ;; * look up a command at http://www.jsoftware.com/help/dictionary/
 
+;;; Code:
+
 (require 'helm)
 (require 'helm-match-plugin)
 (require 'j-mode)
-
-;;; Code:
 
 (defun jc-prep (s)
   "Fontify S for `helm-j-cheatsheet'."
