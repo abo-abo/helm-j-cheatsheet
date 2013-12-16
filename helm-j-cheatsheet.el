@@ -56,7 +56,7 @@
          '("~  [Reflex] • [Passive] / Evoke"
            "/  [Insert] • [Table]"
            "/. [Oblique] • [Key]"
-           "\  [Prefix] • [Infix]"
+           "\\  [Prefix] • [Infix]"
            "\. [Suffix] • [Outfix]"
            "}  [Item Amend] • [Amend] (m} u})"
            "b. [Boolean] / [Basic]"
