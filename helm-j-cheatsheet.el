@@ -172,7 +172,7 @@
            "r.  Angle • Polar"
            "s:  Symbol"
            "u:  Unicode"
-           "x:  Extended Precision")))
+           "x:  Extended Precision • Num/Denom")))
      (action . jc-action-show-doc))))
 
 ;;;###autoload
