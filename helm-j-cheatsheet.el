@@ -141,7 +141,7 @@
            "#:  Antibase 2 • Antibase"
            "!   Factorial • Out Of"
            "/:  Grade Up • Sort"
-           "\:  Grade Down • Sort"
+           "\\:  Grade Down • Sort"
            "[   Same • Left"
            "[:  Cap"
            "]   Same • Right"
