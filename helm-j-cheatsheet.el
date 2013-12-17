@@ -35,12 +35,107 @@
 (require 'helm-match-plugin)
 (require 'j-mode)
 
-(defun jc-prep (s)
-  "Fontify S for `helm-j-cheatsheet'."
-  (replace-regexp-in-string
-   "\\[[^]]*\\]"
-   (lambda(x) (propertize (substring x 1 -1) 'face 'font-lock-keyword-face))
-   s))
+(defgroup helm-j-cheatsheet nil
+  "Quick J reference."
+  :group 'helm
+  :prefix "jc-")
+
+(defface jc-verb-face
+    '((t (:foreground "#110099")))
+  "Face for verbs."
+  :group 'helm-j-cheatsheet)
+
+(defface jc-conjunction-face
+    '((t (:foreground "#7F0055" :weight bold)))
+  "Face for conjunctions."
+  :group 'helm-j-cheatsheet)
+
+(defface jc-adverb-face
+    '((t (:foreground "#BE314C")))
+  "Face for adverbs."
+  :group 'helm-j-cheatsheet)
+
+(defvar jc-verbs
+  '(("=" "Self-Classify" "Equal" "d000")
+    ("<" "Box" "Less Than" "d010")
+    ("<." "Floor" "Lesser Of (Min)" "d011")
+    ("<:" "Decrement" "Less Or Equal" "d012")
+    (">" "Open" "Larger Than" "d020")
+    (">." "Ceiling" "Larger of (Max)" "d021")
+    (">:" "Increment" "Larger Or Equal" "d022")
+    ("_:" "Infinity" "\"" "d032")
+    ("+" "Conjugate" "Plus" "d100")
+    ("+." "Real / Imaginary" "GCD (Or)" "d101")
+    ("+:" "Double" "Not-Or" "d102")
+    ("*" "Signum" "Times" "d110")
+    ("*." "Length/Angle" "LCM (And)" "d111")
+    ("*:" "Square" "Not-And" "d112")
+    ("-" "Negate" "Minus" "d120")
+    ("-." "Not" "Less" "d121")
+    ("-:" "Halve" "Match" "d122")
+    ("%" "Reciprocal" "Divide" "d130")
+    ("%." "Matrix Inverse" "Matrix Divide" "d131")
+    ("%:" "Square Root" "Root" "d132")
+    ("^" "Exponential" "Power" "d200")
+    ("^." "Natural Log" "Logarithm" "d201")
+    ("$" "Shape Of" "Shape" "d210")
+    ("$." "Sparse" "\"" "d211")
+    ("$:" "Self-Reference" "" "d212")
+    ("~." "Nub" "" "d221")
+    ("~:" "Nub Sieve" "Not-Equal" "d222")
+    ("|" "Magnitude" "Residue" "d230")
+    ("|." "Reverse" "Rotate (Shift)" "d231")
+    ("|:" "Transpose" "\"" "d232")
+    ("," "Ravel" "Append" "d320")
+    (",." "Ravel Items" "Stitch" "d321")
+    (",:" "Itemize" "Laminate" "d322")
+    (";" "Raze" "Link" "d330")
+    (";:" "Words" "Sequential Machine" "d332")
+    ("#" "Tally" "Copy" "d400")
+    ("#." "Base 2" "Base" "d401")
+    ("#:" "Antibase 2" "Antibase" "d402")
+    ("!" "Factorial" "Out Of" "d410")
+    ("/:" "Grade Up" "Sort" "d422")
+    ("\\:" "Grade Down" "Sort" "d432")
+    ("[" "Same" "Left" "d500")
+    ("[:" "Cap" "\"" "d502")
+    ("]" "Same" "Right" "d500")
+    ("{" "Catalogue" "From" "d520")
+    ("{." "Head" "Take" "d521")
+    ("{:" "Tail" "" "d522")
+    ("{::" "Map" "Fetch" "d523")
+    ("}." "Behead" "Drop" "d531")
+    ("}:" "Curtail" "" "d532")
+    ("\"." "Do" "Numbers" "d601")
+    ("\":" "Default Format" "Format" "d602")
+    ("?" "Roll" "Deal" "d640")
+    ("?." "Roll" "Deal (fixed seed)" "d641")
+    ("A." "Anagram Index" "Anagram" "dacapdot")
+    ("C." "Cycle-Direct" "Permute" "dccapdot")
+    ("e." "Raze In" "Member (In)" "dedot")
+    ("E." "" "Member of Interval" "decapdot")
+    ("i." "Integers" "Index Of" "didot")
+    ("i:" "Steps" "Index Of Last" "dico")
+    ("I." "Indices" "Interval Index" "dicapdot")
+    ("j." "Imaginary" "Complex" "djdot")
+    ("L." "Level Of" "" "dlcapdot")
+    ("o." "Pi Times" "Circle Function" "dodot")
+    ("p." "Roots" "Polynomial" "dpdot")
+    ("p.." "Poly. Deriv." "Poly. Integral" "dpdotdot")
+    ("p:" "Primes" "\"" "dpco")
+    ("q:" "Prime Factors" "Prime Exponents" "dqco")
+    ("r." "Angle" "Polar" "drdot")
+    ("s:" "Symbol" "\"" "dsco")
+    ("u:" "Unicode" "\"" "duco")
+    ("x:" "Extended Precision" "Num/Denom" "dxco")))
+
+(defun jc-prep (face)
+  "Return a function that fontifies a string."
+  `(lambda(s)
+    (replace-regexp-in-string
+     "\\[[^]]*\\]"
+     (lambda(x) (propertize (substring x 1 -1) 'face ',face))
+     s)))
 
 (defun jc-action-show-doc (x)
   "Extract from X the operation name and `j-help-lookup-symbol'."
@@ -52,7 +147,7 @@
   `(((name . "Adverbs")
      (candidates
       ,@(mapcar
-         #'jc-prep
+         (jc-prep 'jc-adverb-face)
          '("~  [Reflex] • [Passive] / Evoke"
            "/  [Insert] • [Table]"
            "/. [Oblique] • [Key]"
@@ -68,7 +163,7 @@
     ((name . "Conjunctions")
      (candidates
       ,@(mapcar
-         #'jc-prep
+         (jc-prep 'jc-conjunction-face)
          '("^:  [Power] (u^:n u^:v)"
            ".   [Determinant] • [Dot Product]"
            "..  [Even]"
@@ -100,79 +195,12 @@
     ((name . "Verbs")
      (candidates
       ,@(mapcar
-         #'jc-prep
-         '("=   Self-Classify • Equal"
-           "<   Box • Less Than"
-           "<.  Floor • Lesser Of (Min)"
-           "<:  Decrement • Less Or Equal"
-           ">   Open • Larger Than"
-           ">.  Ceiling • Larger of (Max)"
-           ">:  Increment • Larger Or Equal"
-           "_:  Infinity"
-           "+   Conjugate • Plus"
-           "+.  Real / Imaginary • GCD (Or)"
-           "+:  Double • Not-Or"
-           "*   Signum • Times"
-           "*.  Length/Angle • LCM (And)"
-           "*:  Square • Not-And"
-           "-   Negate • Minus"
-           "-.  Not • Less"
-           "-:  Halve • Match"
-           "%   Reciprocal • Divide"
-           "%.  Matrix Inverse • Matrix Divide"
-           "%:  Square Root • Root"
-           "^   Exponential • Power"
-           "^.  Natural Log • Logarithm"
-           "$   Shape Of • Shape"
-           "$.  Sparse"
-           "$:  Self-Reference"
-           "~.  Nub •"
-           "~:  Nub Sieve • Not-Equal"
-           "|   Magnitude • Residue"
-           "|.  Reverse • Rotate (Shift)"
-           "|:  Transpose"
-           ",   Ravel • Append"
-           ",.  Ravel Items • Stitch"
-           ",:  Itemize • Laminate"
-           ";   Raze • Link"
-           ";:  Words • Sequential Machine"
-           "#   Tally • Copy"
-           "#.  Base 2 • Base"
-           "#:  Antibase 2 • Antibase"
-           "!   Factorial • Out Of"
-           "/:  Grade Up • Sort"
-           "\\:  Grade Down • Sort"
-           "[   Same • Left"
-           "[:  Cap"
-           "]   Same • Right"
-           "{   Catalogue • From"
-           "{.  Head • Take"
-           "{:  Tail •"
-           "{:: Map • Fetch"
-           "}.  Behead • Drop"
-           "}:  Curtail •"
-           "\".  Do • Numbers"
-           "\":  Default Format • Format"
-           "?   Roll • Deal"
-           "?.  Roll • Deal (fixed seed)"
-           "A.  Anagram Index • Anagram"
-           "C.  Cycle-Direct • Permute"
-           "e.  Raze In • Member (In)"
-           "E.  Member of Interval"
-           "i.  Integers • Index Of"
-           "i:  Steps • Index Of Last"
-           "I.  Indices • Interval Index"
-           "j.  Imaginary • Complex"
-           "L.  Level Of"
-           "o.  Pi Times • Circle Function"
-           "p.  Roots • Polynomial"
-           "p.. Poly. Deriv. • Poly. Integral"
-           "p:  Primes"
-           "q:  Prime Factors • Prime Exponents  "
-           "r.  Angle • Polar"
-           "s:  Symbol"
-           "u:  Unicode"
-           "x:  Extended Precision • Num/Denom")))
+         (lambda(x)
+           (format "% -4s % -19s %s"
+                   (car x)
+                   (propertize (cadr x) 'face 'jc-verb-face)
+                   (propertize (caddr x) 'face 'jc-verb-face)))
+         jc-verbs))
      (action . jc-action-show-doc))))
 
 ;;;###autoload
