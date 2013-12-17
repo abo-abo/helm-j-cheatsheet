@@ -148,17 +148,17 @@
      (candidates
       ,@(mapcar
          (jc-prep 'jc-adverb-face)
-         '("~  [Reflex] • [Passive] / Evoke"
-           "/  [Insert] • [Table]"
-           "/. [Oblique] • [Key]"
-           "\\ [Prefix] • [Infix]"
-           "\\. [Suffix] • [Outfix]"
-           "}  [Item Amend] • [Amend] (m} u})"
-           "b. [Boolean] / [Basic]"
-           "f. [Fix]"
-           "M. [Memo]"
-           "t. [Taylor Coeff.] (m t. u t.)"
-           "t: [Weighted Taylor]")))
+         '("~   [Reflex] • [Passive] / Evoke"
+           "/   [Insert] • [Table]"
+           "/.  [Oblique] • [Key]"
+           "\\   [Prefix] • [Infix]"
+           "\\.  [Suffix] • [Outfix]"
+           "}   [Item Amend] • [Amend] (m} u})"
+           "b.  [Boolean] / [Basic]"
+           "f.  [Fix]"
+           "M.  [Memo]"
+           "t.  [Taylor Coeff.] (m t. u t.)"
+           "t:  [Weighted Taylor]")))
      (action . jc-action-show-doc))
     ((name . "Conjunctions")
      (candidates
@@ -196,7 +196,7 @@
      (candidates
       ,@(mapcar
          (lambda(x)
-           (format "% -4s % -19s %s"
+           (format "% -3s % -18s %s"
                    (car x)
                    (propertize (cadr x) 'face 'jc-verb-face)
                    (propertize (caddr x) 'face 'jc-verb-face)))
