@@ -159,7 +159,8 @@
            "M.  [Memo]"
            "t.  [Taylor Coeff.] (m t. u t.)"
            "t:  [Weighted Taylor]")))
-     (action . jc-action-show-doc))
+     (action . jc-action-show-doc)
+     (pattern-transformer . regexp-quote))
     ((name . "Conjunctions")
      (candidates
       ,@(mapcar
@@ -191,7 +192,8 @@
            "L:  [Level At]"
            "S:  [Spread]"
            "T.  [Taylor Approximation]")))
-     (action . jc-action-show-doc))
+     (action . jc-action-show-doc)
+     (pattern-transformer . regexp-quote))
     ((name . "Verbs")
      (candidates
       ,@(mapcar
@@ -201,13 +203,15 @@
                    (propertize (cadr x) 'face 'jc-verb-face)
                    (propertize (caddr x) 'face 'jc-verb-face)))
          jc-verbs))
-     (action . jc-action-show-doc))))
+     (action . jc-action-show-doc)
+     (pattern-transformer . regexp-quote))))
 
 ;;;###autoload
 (defun helm-j-cheatsheet ()
   "Use helm to show a J cheat sheet."
   (interactive)
-  (helm :sources helm-source-j-cheatsheet))
+  (let (helm-update-blacklist-regexps)
+    (helm :sources helm-source-j-cheatsheet)))
 
 (provide 'helm-j-cheatsheet)
 
