@@ -4,8 +4,8 @@
 
 ;; Author: Oleh Krehel <ohwoeowho@gmail.com>
 ;; URL: https://github.com/abo-abo/helm-j-cheatsheet
-;; Version: 0.1
-;; Package-Requires: ((helm "1.5.3") (j-mode "1.0.0"))
+;; Version: 0.2
+;; Package-Requires: ((helm "1.5.3"))
 
 ;; This file is not part of GNU Emacs
 
@@ -22,7 +22,6 @@
 ;; For a full copy of the GNU General Public License
 ;; see <http://www.gnu.org/licenses/>.
 
-
 ;;; Commentary:
 ;;
 ;; The J cheat sheet for Emacs:
@@ -33,7 +32,6 @@
 
 (require 'helm)
 (require 'helm-match-plugin)
-(require 'j-mode)
 
 (defgroup helm-j-cheatsheet nil
   "Quick J reference."
@@ -55,7 +53,7 @@
   "Face for adverbs."
   :group 'helm-j-cheatsheet)
 
-(defvar jc-verbs
+(defconst jc-verbs
   '(("=" "Self-Classify" "Equal" "d000")
     ("<" "Box" "Less Than" "d010")
     ("<." "Floor" "Lesser Of (Min)" "d011")
@@ -129,82 +127,80 @@
     ("u:" "Unicode" "\"" "duco")
     ("x:" "Extended Precision" "Num/Denom" "dxco")))
 
-(defun jc-prep (face)
-  "Return a function that fontifies a string."
-  `(lambda(s)
-    (replace-regexp-in-string
-     "\\[[^]]*\\]"
-     (lambda(x) (propertize (substring x 1 -1) 'face ',face))
-     s)))
+(defconst jc-adverbs
+  '(("~" "Reflex" "Passive" "d220v" "Evoke" "d220n")
+    ("/" "Insert" "Table" "d420")
+    ("/." "Oblique" "Key" "d421")
+    ("\\" "Prefix" "Infix" "d430")
+    ("." "Suffix" "Outfix" "d431")
+    ("}" "Item Amend" "Amend" "d530n" "m} / u}" "d530v")
+    ("b." "Boolean" "\"" "dbdotn")
+    ("b." "Basic" "" "dbdotu")
+    ("f." "Fix" "" "dfdot")
+    ("M." "Memo" "" "dmcapdot")
+    ("t." "Taylor Coeff." "" "dtdotu" "u t. / m t." "dtdotm")
+    ("t:" "Weighted Taylor" "" "dtco")))
+
+(defconst jc-conjunctions
+  '(("^:" "Power" "" "d202n" "u^:n / u^:v" "d202v")
+    (".;" "Determinant" "Dot Product" "d300")
+    (".." "Even" "" "d301")
+    (".:" "Odd" "" "d301")
+    (":;" "Explicit" "" "d310n" "Monad-Dyad" "d310v")
+    (":." "Obverse" "" "d311")
+    ("::" "Adverse" "" "d312")
+    (";." "Cut" "\"" "d331")
+    ("!." "Fit (Customize)" "" "d411")
+    ("!:" "Foreign" "" "d412")
+    ("\"" "Rank" "" "d600n" "m\"n / u\"n" "d600v" "m\"v u\"v" "d600xv")
+    ("`;" "Tie" "" "d610")
+    ("`:" "Evoke Gerund" "" "d612")
+    ("@" "Atop" "" "d620")
+    ("@." "Agenda" "" "d621")
+    ("@:" "At" "" "d622")
+    ("&" "Bond" "" "d630n" "Compose" "d630v")
+    ("&." "Under" "" "d631")
+    ("&.:" "Under" "" "d631c")
+    ("&:" "Appose" "" "d632")
+    ("d." "Derivative" "" "dddot")
+    ("D." "Derivative" "" "ddcapdot")
+    ("D:" "Secant Slope" "" "ddcapco")
+    ("H." "Hypergeometric" "" "dhcapdot")
+    ("L:" "Level At" "" "dlcapco")
+    ("S:" "Spread" "" "dscapco")
+    ("T." "Taylor Approximation" "" "dtcapdot")))
 
 (defun jc-action-show-doc (x)
-  "Extract from X the operation name and `j-help-lookup-symbol'."
-  (j-help-lookup-symbol
-   (and (string-match "^\\([^ ]+\\) " x)
-        (match-string 1 x))))
+  "Look up X doc on the internet."
+  (let ((url (format "http://www.jsoftware.com/help/dictionary/%s.htm" (car x))))
+    (message "Loading %s ..." url)
+    (browse-url url)))
+
+(defun jc-candidates (name lst face)
+  "Generate a section for `helm-source-j-cheatsheet'.
+NAME is the section name, LST holds the candidate columns
+and FACE propertizes them."
+  `((name . ,name)
+    (candidates
+     ,@(mapcar
+        (lambda(x)
+          (list
+           (format
+            "% -3s % -18s % -18s %s"
+            (car x)
+            (propertize (cadr x) 'face face)
+            (propertize (caddr x) 'face face)
+            (if (nth 4 x) (propertize (nth 4 x) 'face face) ""))
+           (nth 3 x)))
+        lst))
+    (action . jc-action-show-doc)
+    (pattern-transformer . regexp-quote)))
 
 (defvar helm-source-j-cheatsheet
-  `(((name . "Adverbs")
-     (candidates
-      ,@(mapcar
-         (jc-prep 'jc-adverb-face)
-         '("~   [Reflex] • [Passive] / Evoke"
-           "/   [Insert] • [Table]"
-           "/.  [Oblique] • [Key]"
-           "\\   [Prefix] • [Infix]"
-           "\\.  [Suffix] • [Outfix]"
-           "}   [Item Amend] • [Amend] (m} u})"
-           "b.  [Boolean] / [Basic]"
-           "f.  [Fix]"
-           "M.  [Memo]"
-           "t.  [Taylor Coeff.] (m t. u t.)"
-           "t:  [Weighted Taylor]")))
-     (action . jc-action-show-doc)
-     (pattern-transformer . regexp-quote))
-    ((name . "Conjunctions")
-     (candidates
-      ,@(mapcar
-         (jc-prep 'jc-conjunction-face)
-         '("^:  [Power] (u^:n u^:v)"
-           ".   [Determinant] • [Dot Product]"
-           "..  [Even]"
-           ".:  [Odd]"
-           ":   [Explicit]/[Monad-Dyad]"
-           ":.  [Obverse]"
-           "::  [Adverse]"
-           ";.  [Cut]"
-           "!.  [Fit]"
-           "!:  [Foreign]"
-           "\"   [Rank] (m\"n u\"n m\"v u\"v)"
-           "`   [Tie] (Gerund)"
-           "`:  [Evoke Gerund]"
-           "@   [Atop]"
-           "@.  [Agenda]"
-           "@:  [At]"
-           "&   [Bond] / [Compose]"
-           "&.  [Under] (Dual)"
-           "&.: [Under] (Dual)"
-           "&:  [Appose]"
-           "d.  [Derivative]"
-           "D.  [Derivative]"
-           "D:  [Secant Slope]"
-           "H.  [Hypergeometric]"
-           "L:  [Level At]"
-           "S:  [Spread]"
-           "T.  [Taylor Approximation]")))
-     (action . jc-action-show-doc)
-     (pattern-transformer . regexp-quote))
-    ((name . "Verbs")
-     (candidates
-      ,@(mapcar
-         (lambda(x)
-           (format "% -3s % -18s %s"
-                   (car x)
-                   (propertize (cadr x) 'face 'jc-verb-face)
-                   (propertize (caddr x) 'face 'jc-verb-face)))
-         jc-verbs))
-     (action . jc-action-show-doc)
-     (pattern-transformer . regexp-quote))))
+  (list
+   (jc-candidates "Adverbs" jc-adverbs 'jc-adverb-face)
+   (jc-candidates "Conjunctions" jc-conjunctions 'jc-conjunction-face)
+   (jc-candidates "Verbs" jc-verbs 'jc-verb-face)))
 
 ;;;###autoload
 (defun helm-j-cheatsheet ()
