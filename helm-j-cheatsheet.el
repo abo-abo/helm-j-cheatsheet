@@ -25,8 +25,9 @@
 ;;; Commentary:
 ;;
 ;; The J cheat sheet for Emacs:
-;; * look up a command by English name
-;; * look up a command at http://www.jsoftware.com/help/dictionary/
+;; * look up a command by English name (use C-g when done)
+;; * look up a command at http://www.jsoftware.com/help/dictionary/ (use C-m)
+;; * insert a command by English name (use C-e)
 
 ;;; Code:
 
@@ -172,9 +173,13 @@
 
 (defun jc-action-show-doc (x)
   "Look up X doc on the internet."
-  (let ((url (format "http://www.jsoftware.com/help/dictionary/%s.htm" (car x))))
+  (let ((url (format "http://www.jsoftware.com/help/dictionary/%s.htm" (cadr x))))
     (message "Loading %s ..." url)
     (browse-url url)))
+
+(defun jc-action-insert (x)
+  "Insert X."
+  (insert (car x)))
 
 (defun jc-candidates (name lst face)
   "Generate a section for `helm-source-j-cheatsheet'.
@@ -191,9 +196,11 @@ and FACE propertizes them."
             (propertize (cadr x) 'face face)
             (propertize (caddr x) 'face face)
             (if (nth 4 x) (propertize (nth 4 x) 'face face) ""))
+           (nth 0 x)
            (nth 3 x)))
         lst))
-    (action . jc-action-show-doc)
+    (action . (("Show doc" . jc-action-show-doc)
+               ("Insert" . jc-action-insert)))
     (pattern-transformer . regexp-quote)))
 
 (defvar helm-source-j-cheatsheet
