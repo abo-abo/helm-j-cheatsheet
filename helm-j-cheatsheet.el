@@ -39,6 +39,13 @@
   :group 'helm
   :prefix "jc-")
 
+(defcustom jc-make-insert-primary nil
+  "When nil, \"show doc\" action is primary (C-m),
+while \"insert\" action is secondary (C-e).
+When t, the opposite."
+  :group 'helm-j-cheatsheet
+  :type 'boolean)
+
 (defface jc-verb-face
     '((t (:foreground "#110099")))
   "Face for verbs."
@@ -171,15 +178,43 @@
     ("S:" "Spread" "" "dscapco")
     ("T." "Taylor Approximation" "" "dtcapdot")))
 
+(defconst jc-others
+  '(("=." "Is (Local)" "" "d001")
+    ("=:" "Is (Global)" "" "d001")
+    ("_" "Negative Sign / Infinity" "" "d030")
+    ("_." "Indeterminate" "" "d031")
+    ("a." "Alphabet" "" "dadot")
+    ("a:" "Ace" "" "dadot")
+    ("NB." "Comment" "" "dnb")))
+
 (defun jc-action-show-doc (x)
   "Look up X doc on the internet."
-  (let ((url (format "http://www.jsoftware.com/help/dictionary/%s.htm" (cadr x))))
+  (let ((url (format "http://www.jsoftware.com/help/dictionary/%s.htm" (caadr x))))
     (message "Loading %s ..." url)
+    (browse-url url)))
+
+(defun jc-action-show-2nd-doc (x)
+  "Look up 2nd doc for X on the internet."
+  (let ((bit (caddr (cadr x)))
+        (n "2nd")
+        url)
+    (unless bit
+      (setq bit (caadr x)
+            n "1st"))
+    (message
+     "Loading %s doc %s ..." n
+     (setq url (format "http://www.jsoftware.com/help/dictionary/%s.htm" bit)))
     (browse-url url)))
 
 (defun jc-action-insert (x)
   "Insert X."
   (insert (car x)))
+
+(defun jc-action-transformer (actions candidate)
+  "Action transformer for `helm-source-j-cheatsheet'."
+  (if jc-make-insert-primary
+      (mapcar `(lambda (x) (nth x ',actions)) '(1 0 2))
+    actions))
 
 (defun jc-candidates (name lst face)
   "Generate a section for `helm-source-j-cheatsheet'.
@@ -197,17 +232,20 @@ and FACE propertizes them."
             (propertize (caddr x) 'face face)
             (if (nth 4 x) (propertize (nth 4 x) 'face face) ""))
            (nth 0 x)
-           (nth 3 x)))
+           (subseq x 3)))
         lst))
-    (action . (("Show doc" . jc-action-show-doc)
-               ("Insert" . jc-action-insert)))
+    (action . (("Show 1st doc" . jc-action-show-doc)
+               ("Insert" . jc-action-insert)
+               ("Show 2nd doc" . jc-action-show-2nd-doc)))
+    (action-transformer . jc-action-transformer)
     (pattern-transformer . regexp-quote)))
 
 (defvar helm-source-j-cheatsheet
   (list
    (jc-candidates "Adverbs" jc-adverbs 'jc-adverb-face)
    (jc-candidates "Conjunctions" jc-conjunctions 'jc-conjunction-face)
-   (jc-candidates "Verbs" jc-verbs 'jc-verb-face)))
+   (jc-candidates "Verbs" jc-verbs 'jc-verb-face)
+   (jc-candidates "Others" jc-others nil)))
 
 ;;;###autoload
 (defun helm-j-cheatsheet ()
