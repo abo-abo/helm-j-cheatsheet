@@ -7,10 +7,10 @@ This package provides a `helm` version of [J Vocabulary][dictionary].
 The candidates are grouped by parts of speech: `adverbs`, `conjunctions`, `verbs`, and `others`.
 They're also arranged into a table with four columns:
 
-a. Word itself.
-b. Its monadic name, if applicable.
-c. Its dyadic name, if applicable. `"` is used if it's the same as monadic name.
-d. Its alternate documentation page name if it has one.
+1. Word itself.
+2. Its monadic name, if applicable.
+3. Its dyadic name, if applicable. `"` is used if it's the same as monadic name.
+4. Its alternate documentation page name if it has one.
 
 # Usage
 
