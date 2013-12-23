@@ -27,6 +27,15 @@ Next, you can:
    Most of the words don't have a 2nd doc (you can see this in the fourth column),
    and 1st doc will be brought up if you press `C-j` and 2nd isn't available.
 
+## screenshots
+Here's the initial table (`C-t` is pressed to make it taller):
+
+![screenshot](https://raw.github.com/abo-abo/helm-j-cheatsheet/master/doc/screenshot-1.png)
+
+Here are the candidates for input `po`:
+
+![screenshot](https://raw.github.com/abo-abo/helm-j-cheatsheet/master/doc/screenshot-2.png)
+
 # Customization
 You can customize with `M-x` `customize-group` `RET` `helm-j-cheatsheet` `RET`.
 
