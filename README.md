@@ -15,13 +15,15 @@ They're also arranged into a table with four columns:
 # Usage
 
 First you select a command by either name, e.g. with `+:` or `Double` or `Not Or`.
+
 Next, you can:
 
 1. Stop with `C-g`, since you just wanted to see which name corresponds to what, or
    to see to which part of speech the candidate belongs to.
 
 2. Select one of the 3 actions: "Show 1st doc", "Insert" or "Show 2nd doc".
-   The corresponding default helm shortcuts are `RET`, `C-e` and `C-j`.
+   The corresponding default `helm` shortcuts are `RET`, `C-e` and `C-j`.
+
    Most of the words don't have a 2nd doc (you can see this in the fourth column),
    and 1st doc will be brought up if you press `C-j` and 2nd isn't available.
 
