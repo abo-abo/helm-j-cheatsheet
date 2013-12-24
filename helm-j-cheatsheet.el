@@ -33,6 +33,8 @@
 
 (require 'helm)
 (require 'helm-help)
+(eval-when-compile
+  (require 'cl))
 
 (defgroup helm-j-cheatsheet nil
   "Quick J reference."
