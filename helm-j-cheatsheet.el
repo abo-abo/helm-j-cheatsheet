@@ -32,7 +32,7 @@
 ;;; Code:
 
 (require 'helm)
-(require 'helm-match-plugin)
+(require 'helm-help)
 
 (defgroup helm-j-cheatsheet nil
   "Quick J reference."
@@ -232,7 +232,7 @@ and FACE propertizes them."
             (propertize (caddr x) 'face face)
             (if (nth 4 x) (propertize (nth 4 x) 'face face) ""))
            (nth 0 x)
-           (subseq x 3)))
+           (cl-subseq x 3)))
         lst))
     (action . (("Show 1st doc" . jc-action-show-doc)
                ("Insert" . jc-action-insert)
