@@ -143,7 +143,7 @@ When t, the opposite."
     ("/." "Oblique" "Key" "d421")
     ("f." "Fix" "" "dfdot")
     ("\\" "Prefix" "Infix" "d430")
-    ("." "Suffix" "Outfix" "d431")
+    ("\\." "Suffix" "Outfix" "d431")
     ("}" "Item Amend" "Amend" "d530n" "m} / u}" "d530v")
     ("b." "Boolean" "\"" "dbdotn")
     ("b." "Basic" "" "dbdotu")
