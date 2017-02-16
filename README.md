@@ -42,3 +42,7 @@ You can customize with `M-x` `customize-group` `RET` `helm-j-cheatsheet` `RET`.
 Besides the faces, you can set the custom `jc-make-insert-primary` to `t`, which
 results in "Insert" being the first action, instead of "Show 1st doc".
 This is more convenient if you want to insert words by English name while coding.
+
+If you would like to use offline, you may customize jc-local-dictionary-url to
+point to the docs that ship with a J installation. E.g., on OS X you could have
+(setq jc-local-dictionary-url "file:///Applications/j64-804/addons/docs/help/dictionary")
